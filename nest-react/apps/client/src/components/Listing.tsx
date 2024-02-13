@@ -15,9 +15,8 @@ export interface IMetadata {
   customAnimationUrl: string;
 }
 
-
 export const Listing = () => {
-  const [listings, setListings] = useState<NFT[]>([]);
+  const [listings, setListings] = useState<NFT[]>();
   const nftContractAddress = "0x4F1bbb87Fa6C34D695D4F4d9Ef4CCB102A385588"
   useEffect(() => {
     async function run() {
@@ -29,24 +28,26 @@ export const Listing = () => {
       }
     }
 
-    run(); // Call the function
+    run();
   }, []);
-
-
 
   return (
     <div>
-      <div className="px-4 md:px-20 lg:px-32 space-y-4 border-2 border-black mx-auto mt-[75px] max-w-[800px]">
+      <div className="px-4 md:px-20 lg:px-32 space-y-4 border-2 border-black mx-auto mt-[75px] mb-[75px] max-w-[800px]">
         <div className="font-bold text-black text-[24px] mx-auto text-center">
           Listings
         </div>
-        {!listings && "Loading..."}
-        {listings && listings!.map((listing: NFT) => (
+        {listings ? listings!.map((listing: NFT) => (
           <ListingCard
             key={listing.tokenId}
             metadata={listing.metadata}
           />
-        ))}
+        ))
+          :
+          <div className="font-bold text-slate-300 text-[20px] mx-auto text-center">
+            Loading SmartContract Data...
+          </div>
+        }
       </div>
     </div>
   )
