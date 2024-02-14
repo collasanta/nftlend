@@ -16,6 +16,7 @@ export class UsersService {
 
   async findNfts(contractAddress: string) {
     const provider = this.provider();
+    const chain = await provider.getNetwork();
     const contract = new ethers.Contract(contractAddress, abi, provider);
     const totalSupply = await contract.totalSupply();
     const nfts = [];
@@ -29,7 +30,16 @@ export class UsersService {
         );
       } else {
         const metadata = await response.json();
-        nfts.push({ tokenId: i, metadata });
+        nfts.push({
+          contractAddress,
+          chain: chain.name,
+          tokenId: i,
+          metadata,
+          imgURL: metadata.image.replace(
+            'ipfs://',
+            'https://cf-ipfs.com/ipfs/',
+          ),
+        });
       }
     }
     return nfts

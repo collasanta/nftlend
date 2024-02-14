@@ -1,9 +1,11 @@
 import { useSDK } from "@metamask/sdk-react-ui";
 import { Button } from "./ui/button";
 import { Buffer } from 'buffer';
+import { useState } from "react";
 
 export const SignButton = () => {
   const { provider, connected } = useSDK();
+  const [signed, setSigned] = useState(false);
   const handleConnectAndSign = async () => {
     try {
       const accounts = await provider?.request({ method: "eth_requestAccounts" });
@@ -15,8 +17,8 @@ export const SignButton = () => {
       This message proves you own this wallet address : ${from} 
       
       By signing this message you agree to our terms and conditions, available at: 
-      https://nftlend.com/terms-and-conditions/ 
-      https://nftlend.com/terms-of-use/ 
+      https://nftlendexample.com/terms-and-conditions/ 
+      https://nftlendexample.com/terms-of-use/ 
 
       ChainId : ${chainId!}
       Nonce : 98237982739`
@@ -25,6 +27,7 @@ export const SignButton = () => {
         method: "personal_sign",
         params: [msg, from],
       });
+      sign && setSigned(true);
       window.alert("signedMessage: " + sign);
     } catch (err) {
       window.alert((err as Error).message);
@@ -33,7 +36,7 @@ export const SignButton = () => {
 
   return (
     <div>
-      <Button onClick={handleConnectAndSign} disabled={!connected}>Sign Legal Term</Button>
+      <Button onClick={handleConnectAndSign} disabled={!connected || signed }>Sign Legal Term</Button>
     </div>
   )
 }

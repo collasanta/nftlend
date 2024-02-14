@@ -1,11 +1,11 @@
 import { useState } from "react"
-import { IMetadata } from "./Listing";
+import { INFT } from "./Listing";
 
 
 export const ListingCard = (
-  { metadata, collapsed = false }: { metadata: IMetadata, collapsed?: boolean }
+  { listing, collapsed = false }: { listing: INFT, collapsed?: boolean }
 ) => {
-
+  console.log(listing.metadata.image)
   const [isOpen, setIsOpen] = useState(collapsed);
 
   function handleClick() {
@@ -18,12 +18,20 @@ export const ListingCard = (
       <div onClick={handleClick} className="    flex items-center justify-between ">
         <div className="flex items-center gap-x-2 truncate">
           <div className="w-fit bg-emerald-500/10 rounded-full">
-            <img src={metadata.image} width={112} height={64} alt="thumbnail" className="rounded-md" />
+            <img src={listing.imgURL} width={112} height={64} alt="thumbnail" className="rounded-md" />
           </div>
         </div>
+        <div>
         <p className="font-semibold text-sm pr-2 text-center whitespace-break-spaces">
-          {metadata.name}
+          {listing.metadata.name}
         </p>
+        <p className="text-[10px] pr-2 text-center whitespace-break-spaces">
+          Contract Address: {listing.contractAddress}
+        </p>
+        <p className="text-[10px] pr-2 text-center whitespace-break-spaces">
+          Chain: {listing.chain}
+        </p>
+        </div>
       </div>
     </div>
   )
