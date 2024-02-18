@@ -1,18 +1,18 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
+  "description": "Transaction Confirmation Insights and Contract Verifier",
   "proposedName": "NTF LEND PROTOCOL",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "HC0sKgdUXlGdRK9SB1yKG1pTP0xTr/9quatIrwQIXYo=",
+    "shasum": "gZFgiwb3//BDlQpIcDAkNxW7SYULfJk7BeaRsctNdHI=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "snap",
+        "packageName": "ntflendprotocol",
         "registry": "https://registry.npmjs.org/"
       }
     }

@@ -1,34 +1,35 @@
 import { useSDK } from "@metamask/sdk-react-ui";
-import { Button } from "./ui/button";
+import { Button } from "@chakra-ui/react";
 import { useState } from "react";
+import { ethereumRequest } from "@/lib/utils";
 
 export const InstallSnapButton = () => {
-  const { provider, connected } = useSDK();
+  const { connected } = useSDK();
   const [installed, setInstalled] = useState(false);
 
+  interface InstallResponse {
+    'npm:ntflendprotocol': {
+      enabled: boolean;
+    }
+  }
+
   const installSnap = async () => {
-    try {
-      const install = await provider?.request({
-        "method": "wallet_requestSnaps",
-        "params":
-        {
-          "npm:@pushprotocol/snap": {},
-        }
-      }) as Record<string, { enabled: boolean }>;
+    const install = await ethereumRequest({
+      method: "wallet_requestSnaps",
+      params: {
+        "npm:ntflendprotocol": {},
+      },
+    }) as InstallResponse;
 
-      if (install && install['npm:@pushprotocol/snap']?.enabled) {
-        setInstalled(true);
-        window.alert("snap installed");
-      }
-
-    } catch (err) {
-      window.alert((err as Error).message);
+    if (install['npm:ntflendprotocol']?.enabled) {
+      setInstalled(true);
+      window.alert("snap installed");
     }
   };
-
+  
   return (
     <div>
-      <Button onClick={installSnap} disabled={!connected || installed}>Enable Notifications</Button>
+      <Button onClick={installSnap} isDisabled={!connected || installed}>Enable Snap</Button>
     </div>
   )
 }

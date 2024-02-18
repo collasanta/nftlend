@@ -1,57 +1,53 @@
-import { ListingCard } from "./ListingCard";
-import { useQuery } from "@metamask/sdk-react-ui";
-import Spinner from "./Spinner";
+import { useQuery } from 'react-query';
+import { ListingCard } from './ListingCard';
+import Spinner from './Spinner';
 
-export interface INFT {
-  tokenId: number;
-  metadata: IMetadata;
-  imgURL: string,
-  contractAddress: string;
+export type ILoan = {
+  loanId: number;
+  initialOwner: string;
+  nftContractAddress: string;
+  tokenId: string;
+  principal: string;
+  duration: string;
+  interest: string;
+  lender: string;
+  startDate: string;
+  loanStatus: string;
   chain: string;
-}
-
-export interface IMetadata {
+  imgURL: string;
   name: string;
-  description: string;
-  image: string;
-  external_url: string;
-  background_color: string;
-  customImage: string;
-  customAnimationUrl: string;
-}
+};
 
 export const Listing = () => {
-  const nftContractAddress = "0x4F1bbb87Fa6C34D695D4F4d9Ef4CCB102A385588"
-
-  async function fetchNfts() {
-    const getResponse = await fetch(`api/users/nfts/${nftContractAddress}`);
-    if (!getResponse.ok) {
-      throw new Error('Error fetching data');
+  const fetchListings = async (): Promise<ILoan[]> => {
+    const res = await fetch(`api/users/loans`);
+    if (!res.ok) {
+      throw new Error('Error fetching listings');
     }
-    return await getResponse.json();
-  }
+    return res.json();
+  };
 
-  const { data: listings } = useQuery<INFT[]>(['nfts'], fetchNfts);
+  const { data: listings, error, isLoading } = useQuery<ILoan[]>('nfts', fetchListings);
 
   return (
     <div>
-      <div className="px-4 md:px-20 lg:px-32 space-y-4 bg-gray-200 rounded-lg mx-auto mt-[75px] pb-[25px] max-w-[800px]">
-        <div className="font-bold text-black text-[24px] mx-auto text-center">
-          Listings
-        </div>
-        {listings ? listings!.map((listing: INFT) => (
-          <ListingCard
-            key={listing.tokenId}
-            listing={listing}
-          />
-        ))
-          :
-          <div className="font-bold text-slate-300 text-[20px] mx-auto text-center">
-            Loading SmartContract Data...
-            <Spinner />
+      <div className="px-4 md:px-20 lg:px-32 space-y-4 mt-10">
+        <div className='pb-10 bg-[#f2f2f2] max-w-[700px] mx-auto rounded-lg'>
+          <div className='text-center text-[30px] py-3'>
+            {isLoading && <div><Spinner/></div>}
+            {(error as Error) && <div>Error Loading Listings</div>}
+            {listings && listings.length > 0 && <div>Loans Listings</div>}
           </div>
-        }
+          <div className='space-y-4'>
+          {listings && listings.map((listing: ILoan) => (
+            <ListingCard
+              key={listing.loanId}
+              listing={listing}
+            />
+          ))}
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};

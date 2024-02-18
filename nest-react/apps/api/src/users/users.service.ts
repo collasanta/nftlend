@@ -1,9 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { ethers } from 'ethers';
-const abi = [
-  'function tokenURI(uint256 _tokenId) external view returns (string)',
-  'function totalSupply() external view returns (uint256)',
-];
+import { ethers, Interface } from 'ethers';
+import { abi } from '../../abi/NFTVault.json';
+
+const nftVaultAddress = '0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711';
+const nftVaultInterface = new Interface(abi);
+
+export interface MetadataResult {
+  contractAddress: string;
+  chain: string;
+  tokenId: number;
+  metadata: Metadata | null;
+  imgURL: string | null;
+}
+
+interface Metadata {
+  name: string;
+  description: string;
+  image: string;
+  external_url: string;
+  background_color: string;
+  customImage: string;
+  customAnimationUrl: string;
+}
+
+export interface Loan {
+  loanId: number;
+  initialOwner: string;
+  nftContractAddress: string;
+  tokenId: number;
+  principal: string;
+  duration: string;
+  interest: string;
+  lender: string;
+  startDate: string;
+  loanStatus: string;
+  chain: string;
+  imgURL: string;
+  name: string;
+}
 
 @Injectable()
 export class UsersService {
@@ -14,34 +48,103 @@ export class UsersService {
     return provider;
   }
 
-  async findNfts(contractAddress: string) {
+  async getMetadata(
+    contractAddress: string,
+    tokenId: number,
+  ): Promise<MetadataResult> {
+    const abi = [
+      'function tokenURI(uint256 _tokenId) external view returns (string)',
+    ];
     const provider = this.provider();
     const chain = await provider.getNetwork();
     const contract = new ethers.Contract(contractAddress, abi, provider);
-    const totalSupply = await contract.totalSupply();
-    const nfts = [];
-    for (let i = 1; i <= totalSupply; i++) {
-      const tokenURI = await contract.tokenURI(i-1);
-      const ipfsURL = tokenURI.replace('ipfs://', 'https://cf-ipfs.com/ipfs/');
+    const tokenURI = await contract.tokenURI(tokenId);
+    const ipfsURL = tokenURI.replace('ipfs://', 'https://cf-ipfs.com/ipfs/');
+    try {
       const response = await fetch(ipfsURL);
       if (!response.ok) {
-        console.error(
+        throw new Error(
           `Failed to fetch metadata from ${tokenURI}: ${response.status} ${response.statusText}`,
         );
       } else {
         const metadata = await response.json();
-        nfts.push({
+        if (!metadata || typeof metadata.name !== 'string') {
+          throw new Error('Invalid metadata');
+        }
+        return {
           contractAddress,
           chain: chain.name,
-          tokenId: i,
+          tokenId: tokenId,
           metadata,
           imgURL: metadata.image.replace(
             'ipfs://',
             'https://cf-ipfs.com/ipfs/',
           ),
-        });
+        };
       }
+    } catch (error) {
+      console.error(`Failed to get NFT Metadata: ${error}`);
+      throw error;
     }
-    return nfts
+  }
+
+  async getLoans(): Promise<Loan[]> {
+    try {
+      const listings = [];
+      let index = 1;
+      let result;
+      do {
+        result = await this.getLoan(index);
+        const convertedResult = result[0];
+        if (convertedResult === '0x0000000000000000000000000000000000000000') {
+          break;
+        }
+        listings.push(result);
+        index++;
+      } while (true);
+      const listingsMetadata = await Promise.all(
+        listings.map(async (listing, index) => {
+          const metadata = await this.getMetadata(listing[1], listing[2]);
+          return {
+            loanId: index + 1,
+            initialOwner: listing[0],
+            nftContractAddress: listing[1],
+            tokenId: listing[2],
+            principal: listing[3],
+            duration: listing[4],
+            interest: listing[5],
+            lender: listing[6],
+            startDate: listing[7],
+            loanStatus: listing[8],
+            chain: metadata.chain,
+            imgURL: metadata.imgURL,
+            name: metadata.metadata.name,
+          };
+        }),
+      );
+      return listingsMetadata;
+    } catch (error) {
+      console.error(`Failed to get loans: ${error}`);
+      throw error;
+    }
+  }
+
+  async getLoan(index: number): Promise<string[]> {
+    try {
+      const provider = this.provider();
+      const contract = new ethers.Contract(
+        nftVaultAddress,
+        nftVaultInterface,
+        provider,
+      );
+      const result = await contract.loans(index);
+      const convertedResult = result.map((value) =>
+        typeof value === 'bigint' ? value.toString() : value,
+      );
+      return convertedResult;
+    } catch (error) {
+      console.error(`Failed to get loan at index ${index}: ${error}`);
+      throw error;
+    }
   }
 }
