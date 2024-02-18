@@ -20,7 +20,8 @@
 
 require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const mnemonic ="patient clay install ritual explain broom true monitor version media toddler spider"
+const infuraKey = "c8c18bb708574c728d95fb45ec034dfe";
+const privateKey = "665d7ecabf6bdc350526825859c4e1876e877b137806fc41dec2b6351b1f529b";
 
 module.exports = {
   /**
@@ -46,6 +47,18 @@ module.exports = {
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "1337",    // Any network (default: none)
     },
+    lineatestnet: {
+      provider: () => new HDWalletProvider({
+        privateKeys: [privateKey],
+        providerOrUrl: `https://linea-goerli.infura.io/v3/${infuraKey}`
+      }),
+      network_id: 59140,       // Linea's id
+      gas: 5500000,        // Linea has a lower block limit than mainnet
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+  },
     //
     // An additional network, but with some advanced options…
     // advanced: {
@@ -59,12 +72,12 @@ module.exports = {
     //
     // Useful for deploying to a public network.
     // Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.
-  },
+  // },
 
   // Set default mocha options here, use special reporters, etc.
-  mocha: {
-    // timeout: 100000
-  },
+  // mocha: {
+  //   timeout: 100000
+  // },
 
   // Configure your compilers
   compilers: {
@@ -79,7 +92,7 @@ module.exports = {
       //  evmVersion: "byzantium"
       // }
     },
-  },
+  }
 
   // Truffle DB is currently disabled by default; to enable it, change enabled:
   // false to enabled: true. The default storage location can also be
