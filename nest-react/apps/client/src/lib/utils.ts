@@ -8,7 +8,7 @@ export type TransactionParams = {
   msg?: string;
 } ;
 
-export type EthereumTransactionParams = TransactionParams[] | [string, string] | object;
+export type EthereumTransactionParams = TransactionParams[] | [string, string] | object; 
 
 export const requestAccounts = async (): Promise<string[]> => {
   const accounts = await ethereumRequest({ method: 'eth_requestAccounts' });
@@ -18,6 +18,8 @@ export const requestAccounts = async (): Promise<string[]> => {
 export const ethereumRequest = async (request: { method: string; params?: EthereumTransactionParams }) => {
   if (window.ethereum) {
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       return await window.ethereum.request(request);
     } catch (error) {
       console.error(error);

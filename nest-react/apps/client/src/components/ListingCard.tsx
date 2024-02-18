@@ -57,7 +57,6 @@ export const ListingCard = (
     });
   };
 
-
   const defaultCollateral = async (): Promise<void> => {
     const loanId = listing.loanId
     const functionData = NFTVaultInterface!.encodeFunctionData(
@@ -80,7 +79,7 @@ export const ListingCard = (
 
   return (
     <>
-      <div className="flex flex-col mx-auto border max-w-[600px] shadow-md bg-slate-200 border-black/5 text-card-foreground shadow-sm rounded-lg text-[13px]  py-2 px-2 hover:shadow-lg transition cursor-pointer">
+      <div className="flex flex-col mx-auto border max-w-[600px] bg-slate-200 border-black/5 text-card-foreground shadow-sm rounded-lg text-[13px]  py-2 px-2 hover:shadow-lg transition cursor-pointer">
         <div onClick={handleClick} className="flex items-center justify-between ">
           <div>
             <div className="flex items-center">

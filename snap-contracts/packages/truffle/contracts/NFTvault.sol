@@ -4,7 +4,6 @@ import "@openzeppelin/contracts/interfaces/IERC721.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "truffle/console.sol";
 
 contract NFTVault is ReentrancyGuard, IERC721Receiver {
   using SafeMath for uint256;

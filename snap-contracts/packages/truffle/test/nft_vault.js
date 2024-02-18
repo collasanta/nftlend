@@ -56,7 +56,6 @@ contract("NFTVault", accounts => {
     const loan = await nftVault.loans(1);
     assert.equal(loan.status.toString(), "3"); // Repaid
   });
-
 });
 
 function increaseTime(time) {

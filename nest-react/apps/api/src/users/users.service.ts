@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ethers, Interface } from 'ethers';
-import { abi } from '../../abi/NFTVault.json';
+import { abi } from '../abi/NFTVault.json';
 
 const nftVaultAddress = '0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711';
 const nftVaultInterface = new Interface(abi);
+const infuraKey = 'c8c18bb708574c728d95fb45ec034dfe';
 
 export interface MetadataResult {
   contractAddress: string;
@@ -43,7 +44,7 @@ export interface Loan {
 export class UsersService {
   private provider(): ethers.JsonRpcProvider {
     const provider = new ethers.JsonRpcProvider(
-      'https://linea-goerli.infura.io/v3/c8c18bb708574c728d95fb45ec034dfe',
+      `https://linea-goerli.infura.io/v3/${infuraKey}`,
     );
     return provider;
   }

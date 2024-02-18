@@ -582,7 +582,7 @@ const Index = () => {
                   <p>
                     <input type="text" name="interest" id="interest" />
                   </p>
-                  <button type="submit">Deposit</button>
+                  <button type="submit">Send</button>
                 </form>
               ),
             }}
