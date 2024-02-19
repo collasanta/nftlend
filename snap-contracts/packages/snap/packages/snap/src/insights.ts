@@ -1,4 +1,5 @@
 import { heading, panel, text } from '@metamask/snaps-ui';
+import type { Json } from '@metamask/utils';
 import { ethers } from 'ethers';
 
 import NFTVault from './contracts/NFTVault.json';
@@ -11,7 +12,7 @@ import NFTVault from './contracts/NFTVault.json';
  * @returns The insights for the transaction.
  */
 export async function getInsights(
-  transaction: Record<string, unknown>,
+  transaction: { [key: string]: Json },
   transactionOrigin: string,
 ) {
   const networkId = await ethereum.request({ method: 'net_version' });
@@ -34,8 +35,12 @@ export async function getInsights(
   if (verifiedStatus === 'Verified Protocol Contract ✅') {
     const NFTVaultInterface = new ethers.Interface(NFTVault.abi);
     const parsedTransaction = NFTVaultInterface.parseTransaction({
-      data: transaction.data as string,
+      data: String(transaction.data),
     });
+
+    const transactionValue = transaction.value?.toString() ?? '0x0';
+    const transactionValueWei = BigInt(transactionValue).toString();
+
     if (parsedTransaction?.name === 'setLoanTerms') {
       return {
         content: panel([
@@ -73,7 +78,7 @@ export async function getInsights(
           heading(`Loan ID:`),
           text(`${String(parsedTransaction.args[0])}`),
           heading(`Sending:`),
-          text(`${String(transaction.value)} wei`),
+          text(`${transactionValueWei} wei`),
           text(`as Loan Principal`),
         ]),
       };
@@ -92,7 +97,7 @@ export async function getInsights(
           heading(`Loan ID:`),
           text(`${String(parsedTransaction.args)}`),
           heading(`Sending:`),
-          text(`${String(transaction.value)} wei`),
+          text(`${transactionValueWei} wei`),
           text(`as Loan Principal + Interest Amount`),
         ]),
       };

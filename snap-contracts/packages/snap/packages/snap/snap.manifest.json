@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Transaction Confirmation Insights and Contract Verifier",
   "proposedName": "NTF LEND PROTOCOL",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "pHZV4lQ6bkddhBevgfkCjr03iIUuQJDA7HinW1C9pmY=",
+    "shasum": "Ta/3bUxGV33lqjbpMw0ApYATcOLWFiqEE67o6JrKZhI=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
