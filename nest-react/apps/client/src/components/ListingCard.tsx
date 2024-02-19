@@ -96,12 +96,16 @@ export const ListingCard = (
                 {listing.loanStatus === LoanStatus.Repaid && '   Repaid'}
               </span>
             </div>
-            <p className="text-[10px] font-bold text-gray-800 ml-2">
-              Time Left:
-            </p>
-            <p className="text-[10px] font-bold text-gray-800 ml-2">
-              <span className="max-w-[50px] font-normal overflow-hidden overflow-ellipsis align-bottom inline-block whitespace-nowrap">{timeLeft}</span> <span className="font-normal">sec</span>
-            </p>
+            {listing.loanStatus === LoanStatus.Active && (
+              <>
+                <p className="text-[10px] font-bold text-gray-800 ml-2">
+                  Time Left:
+                </p>
+                <p className="text-[10px] font-bold text-gray-800 ml-2">
+                  <span className="max-w-[50px] font-normal overflow-hidden overflow-ellipsis align-bottom inline-block whitespace-nowrap">{timeLeft}</span> <span className="font-normal">sec</span>
+                </p>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-x-2 truncate">
