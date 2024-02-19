@@ -17,6 +17,7 @@
     "packages/*"
   ],
   "scripts": {
+    "install": "yarn install",
     "build": "yarn workspaces foreach --parallel --topological --verbose run build",
     "lint": "yarn lint:eslint && yarn lint:misc --check",
     "lint:eslint": "eslint . --cache --ext js,ts",
