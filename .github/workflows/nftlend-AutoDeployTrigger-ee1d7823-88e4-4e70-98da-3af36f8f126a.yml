@@ -35,7 +35,7 @@ jobs:
           registryPassword: ${{ secrets.NFTLEND_REGISTRY_PASSWORD }}
           containerAppName: nftlend
           resourceGroup: containers
-          imageToBuild: collasanta/collasanta/nftlend:${{ github.sha }}
+          imageToBuild: collasanta/nftlend:${{ github.sha }}
           
             
 
