@@ -29,7 +29,7 @@ export const InstallSnapButton = () => {
   
   return (
     <div>
-      <Button onClick={installSnap} isDisabled={!connected || installed}>Enable Snap</Button>
+      <Button onClick={installSnap} colorScheme="orange" isDisabled={!connected || installed}>Enable Snap</Button>
     </div>
   )
 }

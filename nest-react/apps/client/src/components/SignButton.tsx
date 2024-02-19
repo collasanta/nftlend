@@ -29,7 +29,7 @@ export const SignButton = () => {
 
   return (
     <div>
-      <Button onClick={handleConnectAndSign} isDisabled={!connected || signed}>Sign Legal Term</Button>
+      <Button onClick={handleConnectAndSign} colorScheme="red" isDisabled={!connected || signed}>Sign Legal Term</Button>
     </div>
   )
 }
