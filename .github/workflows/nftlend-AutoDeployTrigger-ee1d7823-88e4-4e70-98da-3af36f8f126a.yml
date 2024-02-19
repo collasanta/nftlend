@@ -7,7 +7,7 @@ on:
     branches: 
       [ main ]
     paths:
-    - '**'
+    - 'nest-react/**'
     - '.github/workflows/nftlend-AutoDeployTrigger-ee1d7823-88e4-4e70-98da-3af36f8f126a.yml'
 
   # Allow manual trigger 
@@ -29,7 +29,7 @@ jobs:
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
         with:
-          appSourcePath: ${{ github.workspace }} 
+          appSourcePath: ${{ github.workspace }}/nest-react 
           registryUrl: docker.io
           registryUsername: ${{ secrets.NFTLEND_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.NFTLEND_REGISTRY_PASSWORD }}
