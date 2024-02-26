@@ -8,8 +8,6 @@ RUN apk add --no-cache --virtual .gyp python3 make g++
 
 RUN npm install
 
-RUN npm run build
-
-CMD ["npm", "run", "start"]
+CMD ["npx", "turbo", "run", "start"]
 
 EXPOSE 3000

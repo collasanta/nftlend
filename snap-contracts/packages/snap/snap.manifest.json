@@ -1,0 +1,31 @@
+{
+  "version": "0.1.1",
+  "description": "Transaction Confirmation Insights and Contract Verifier",
+  "proposedName": "NTF LEND PROTOCOL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+  },
+  "source": {
+    "shasum": "yHK4+ZXRQgaGSCDGH7jhzvwj5eJ6b3crCO96P8kH9ho=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "iconPath": "images/icon.svg",
+        "packageName": "ntflendprotocol",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "endowment:transaction-insight": {
+      "allowTransactionOrigin": true
+    },
+    "endowment:ethereum-provider": {},
+    "endowment:rpc": {
+      "dapps": true,
+      "snaps": false
+    }
+  },
+  "manifestVersion": "0.1"
+}

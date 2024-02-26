@@ -3,6 +3,7 @@ const { networks } = require('../truffle-config');
 
 require('dotenv').config({});
 
+
 if(process.env.MNEMONIC_PHRASE) { 
   options.wallet = { 
     mnemonic: process.env.MNEMONIC_PHRASE
@@ -30,4 +31,15 @@ server.listen(PORT, async (err) => {
     console.log(`mnemonic used: ${provider.getOptions().wallet?.mnemonic}`);
     console.log(provider.getInitialAccounts());
   }
+
+  console.log("Deploying Contracts")
+  const { exec } = require('child_process');
+  exec('truffle migrate', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+  });
 });
