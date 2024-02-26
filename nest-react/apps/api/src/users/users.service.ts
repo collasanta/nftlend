@@ -60,6 +60,25 @@ export class UsersService {
     const chain = await provider.getNetwork();
     const contract = new ethers.Contract(contractAddress, abi, provider);
     const tokenURI = await contract.tokenURI(tokenId);
+    // Handle the case where the tokenURI is not found
+    if (tokenURI === '' || tokenURI === null) {
+      return {
+        contractAddress,
+        chain: chain.name,
+        tokenId: tokenId,
+        metadata: {
+          name: 'MOCKNFT',
+          description: '',
+          image: '',
+          external_url: '',
+          background_color: '',
+          customImage: '',
+          customAnimationUrl: '',
+        },
+        imgURL:
+          'https://st2.depositphotos.com/3904951/8925/v/450/depositphotos_89250312-stock-illustration-photo-picture-web-icon-in.jpg',
+      };
+    }
     const ipfsURL = tokenURI.replace('ipfs://', 'https://cf-ipfs.com/ipfs/');
     try {
       const response = await fetch(ipfsURL);
