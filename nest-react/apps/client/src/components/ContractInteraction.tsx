@@ -4,6 +4,8 @@ import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, Mo
 import { abi } from '../../abi/NFTVault.json';
 import erc721abi from '../../abi/ERC721.json';
 import { EthereumTransactionParams, ethereumRequest, requestAccounts } from '@/lib/utils';
+import { SignButton } from './SignButton';
+import { InstallSnapButton } from './InstallSnapButton';
 
 const NFTVaultContractAddress = '0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711';
 
@@ -62,12 +64,18 @@ const ContractInteraction = () => {
 
   return (
     <>
-      <div className='mx-auto max-w-[750px] justify-center flex mt-10'>
-        <Button onClick={onOpen} colorScheme='blue'>Create a Listing</Button>
+      <div className='mx-auto flex flex-col sm:flex-row  max-w-[600px] space-y-2  mt-6  justify-center sm:justify-around sm:items-center'>
+        <div className='space-x-2 mx-auto flex'>
+          <SignButton />
+          <InstallSnapButton />
+        </div>
+        <button onClick={onOpen} className="mt-3 mx-2 p-3 px-8 min-w-[120px] text-[20px] bg-blue-500 shadow-sm text-white rounded-lg" >
+          Propose Loan
+        </button>
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Set Loan Terms</ModalHeader>
+            <ModalHeader>Set Loan Terms as Borrower</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <form id="depositToVault" onSubmit={setLoanTerms}>
@@ -95,7 +103,7 @@ const ContractInteraction = () => {
                   </InputGroup>
                 </FormControl>
                 <FormControl>
-                  <FormLabel>Interest Amount</FormLabel>
+                  <FormLabel>Repayment Interest Amount</FormLabel>
                   <InputGroup>
                     <Input borderColor="gray.500" type="text" value={interest} onChange={(e) => setInterest(e.target.value)} />
                     <InputRightAddon borderColor="gray.500" children="ETH" />

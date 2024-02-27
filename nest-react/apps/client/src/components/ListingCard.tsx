@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { ILoan } from "./Listing";
-import { Button } from "@chakra-ui/react";
 import { ethers } from 'ethers';
 import { abi } from '../../abi/NFTVault.json';
-import { EthereumTransactionParams, LoanStatus, calculateAPR, ethereumRequest, requestAccounts } from "@/lib/utils";
+import { EthereumTransactionParams, LoanStatus, calculateAPR, convertSeconds, ethereumRequest, requestAccounts } from "@/lib/utils";
 
 const NFTVaultContractAddress = '0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711';
 const NFTVaultInterface = new ethers.utils.Interface(abi);
@@ -79,60 +78,89 @@ export const ListingCard = (
 
   return (
     <>
-      <div className="flex flex-col mx-auto border max-w-[600px] bg-slate-200 border-black/5 text-card-foreground shadow-sm rounded-lg text-[13px]  py-2 px-2 hover:shadow-lg transition cursor-pointer">
-        <div onClick={handleClick} className="flex items-center justify-between ">
-          <div>
-            <div className="flex items-center">
-              <span className="text-[25px]">
+      <div className="flex flex-col mx-auto border max-w-[600px] bg-slate-200 border-black/5 text-card-foreground shadow-sm rounded-lg text-[13px]  py-2 px-2 hover:shadow-lg transition">
+        <div className="flex flex-col pt-6 sm:pt-0 sm:flex-row items-center justify-around">
+          <div className="flex flex-col items-center gap-x-2 truncate">
+            <div onClick={handleClick} className="cursor-pointer w-fit bg-card py-1 rounded-md mx-auto text-center flex flex-col justify-center items-center">
+              <img src={listing.imgURL} width={112} height={64} alt="thumbnail" className="rounded-md" />
+              <span className="text-zinc-500 p-1 rounded-lg bg-slate-200">{listing.name}</span>
+            </div>
+          </div>
+          <div onClick={handleClick} className="cursor-pointer">
+            <div className="pb-2">
+              <div className="flex flex-col items-center">
+              </div>
+            </div>
+            <div className="grid grid-cols-2 text-start bg-card p-2 rounded-lg max-w-[250px] min-w-[200px]" style={{ gridTemplateColumns: '1fr 2fr' }}>
+              <div className="flex flex-col justify-start items-start">
+                <p className="text-[10px] pr-2 text-sm text-center whitespace-break-spaces">Chain:</p>
+                <p className="text-[10px] pr-2 text-sm text-center whitespace-break-spaces">Principal:</p>
+                <p className="text-[10px] text-sm pr-2 text-center whitespace-break-spaces">Yield:</p>
+                <p className="text-[10px] text-sm pr-2 text-center whitespace-break-spaces">Duration:</p>
+                <p className="text-[10px] text-sm pr-2 whitespace-break-spaces">APR:</p>
+              </div>
+              <div className="flex flex-col justify-start items-start">
+                <p className="text-[10px] pr-2 text-sm text-center whitespace-break-spaces">
+                  <span className="text-gray-500">{listing.chain}</span>
+                </p>
+                <p className="text-[10px] pr-2 text-sm text-center whitespace-break-spaces">
+                  <span className="text-gray-500">{ethers.utils.formatEther(listing.principal).toString()} eth</span>
+                </p>
+                <p className="text-[10px] text-sm pr-2 text-center whitespace-break-spaces">
+                  <span className="text-gray-500">{ethers.utils.formatEther(listing.interest).toString()} eth</span>
+                </p>
+                <p className="text-[10px] text-sm pr-2 text-center whitespace-break-spaces">
+                  <span className="text-gray-500">{convertSeconds(listing.duration)}</span>
+                </p>
+                <p className="text-[10px] text-sm pr-2 whitespace-break-spaces">
+                  <span className="text-gray-500">{calculateAPR(listing.principal, listing.interest, listing.duration)}%</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="text-centerounded-lg flex justify-center items-center rounded-lg flex-col py-2 min-w-[100px] sm:h-[100px]">
+            <p className="font-semibold text-sm pr-2 text-center whitespace-break-spaces bg-card p-2 min-w-[100px] rounded-lg">
+              <span className="text-[15px]">
                 {listing.loanStatus === LoanStatus.Available && '🟢'}
                 {listing.loanStatus === LoanStatus.Active && '🟡'}
                 {listing.loanStatus === LoanStatus.Defaulted && '🔴'}
                 {listing.loanStatus === LoanStatus.Repaid && '🔵'}
               </span>
-              <span className="text-[10px] text-gray-500 ml-2">
+              <span className="text-[13px] text-gray-600 ml-2">
                 {listing.loanStatus === LoanStatus.Available && 'Available'}
-                {listing.loanStatus === LoanStatus.Active && '   Active'}
+                {(listing.loanStatus === LoanStatus.Active && timeLeft !== 0) && 'Active'}
+                {(listing.loanStatus === LoanStatus.Active && timeLeft === 0) && 'Expired'}
                 {listing.loanStatus === LoanStatus.Defaulted && 'Defaulted'}
-                {listing.loanStatus === LoanStatus.Repaid && '   Repaid'}
+                {listing.loanStatus === LoanStatus.Repaid && 'Repaid'}
               </span>
-            </div>
-            {listing.loanStatus === LoanStatus.Active && (
-              <>
-                <p className="text-[10px] font-bold text-gray-800 ml-2">
-                  Time Left:
-                </p>
-                <p className="text-[10px] font-bold text-gray-800 ml-2">
-                  <span className="max-w-[50px] font-normal overflow-hidden overflow-ellipsis align-bottom inline-block whitespace-nowrap">{timeLeft}</span> <span className="font-normal">sec</span>
-                </p>
-              </>
-            )}
-          </div>
+            </p>
+            {
+              listing.loanStatus === LoanStatus.Available && (
+                <button onClick={lendMoney} className="z-[0] mt-3 p-2 min-w-[100px] text-[14px] bg-green-600 shadow-sm text-white rounded-lg" >
+                  Lend
+                </button>
+              )
+            }
+            {
+              (listing.loanStatus === LoanStatus.Active && timeLeft !== 0) && (
+                <div className="mx-auto items-center flex flex-col">
+                  <button onClick={repayLoan} className="mt-3 p-2 min-w-[100px] text-[14px] bg-blue-400 shadow-sm text-white rounded-lg" >
+                    Repay
+                  </button>
+                </div>
 
-          <div className="flex items-center gap-x-2 truncate">
+              )
+            }
+            {
+              (listing.loanStatus === LoanStatus.Active && timeLeft === 0) && (
+                <div className="mx-auto items-center flex flex-col">
+                  <button onClick={defaultCollateral} className="mt-3 p-2 min-w-[100px] text-white text-[14px] bg-red-400 shadow-sm rounded-lg" >
+                    Default
+                  </button>
+                </div>
 
-            <div className="w-fit rounded-md mx-auto text-center flex flex-col justify-center items-center">
-              <img src={listing.imgURL} width={112} height={64} alt="thumbnail" className="rounded-md" />
-            </div>
-          </div>
-          <div className="text-start flex flex-col justify-start items-start bg-card p-2 rounded-lg">
-            <p className="font-semibold text-sm pr-2 text-center whitespace-break-spaces">
-              {listing.name} <span className="text-gray-500 text-xs">{listing.chain}</span>
-            </p>
-            <p className="text-[10px] pr-2 text-center whitespace-break-spaces">
-
-            </p>
-            <p className="text-[10px] pr-2 text-sm text-center whitespace-break-spaces">
-              Principal: <span className="text-gray-500">{listing.principal} wei</span>
-            </p>
-            <p className="text-[10px] text-sm pr-2 text-center whitespace-break-spaces">
-              Interest:   <span className="text-gray-500">{listing.interest} wei</span>
-            </p>
-            <p className="text-[10px] text-sm pr-2 text-center whitespace-break-spaces">
-              Duration: <span className="text-gray-500">{listing.duration} sec</span>
-            </p>
-            <p className="text-[10px] text-sm pr-2 text-center whitespace-break-spaces">
-              APR: <span className="text-gray-500">{calculateAPR(listing.principal, listing.interest, listing.duration)}%</span>
-            </p>
+              )
+            }
           </div>
         </div>
         {isOpen &&
@@ -179,35 +207,7 @@ export const ListingCard = (
                     )
                   }
                 </div>
-                <div className="text-centerounded-lg flex justify-center items-center flex-col py-2">
-                  {
-                    listing.loanStatus === LoanStatus.Available && (
-                      <Button onClick={lendMoney} colorScheme="green">
-                        Lend
-                      </Button>
-                    )
-                  }
-                  {
-                    listing.loanStatus === LoanStatus.Active && (
-                      <div className="mx-auto items-center flex flex-col">
-                        <Button onClick={repayLoan} className="mt-3" colorScheme="green">
-                          Repay
-                        </Button>
-                      </div>
 
-                    )
-                  }
-                  {
-                    (listing.loanStatus === LoanStatus.Active && timeLeft === 0) && (
-                      <div className="mx-auto items-center flex flex-col">
-                        <Button onClick={defaultCollateral} className="mt-3" colorScheme="red">
-                          Default
-                        </Button>
-                      </div>
-
-                    )
-                  }
-                </div>
               </div>
             )}
           </div>

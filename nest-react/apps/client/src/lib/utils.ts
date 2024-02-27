@@ -1,4 +1,10 @@
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 import { ethers } from "ethers";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 export type TransactionParams = {
   from: string;
@@ -10,13 +16,7 @@ export type TransactionParams = {
 
 export type EthereumTransactionParams = TransactionParams[] | [string, string] | object; 
 
-// export const requestAccounts = async (): Promise<string[]> => {
-//   const accounts = await ethereumRequest({ method: 'eth_requestAccounts' });
-//   return accounts as string[];
-// };
-
 export const requestAccounts = async (): Promise<string[]> => {
-  // Check if Ethereum provider is injected
   if (window.ethereum) {
       try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -78,14 +78,43 @@ export const ethereumRequest = async (request: { method: string; params?: Ethere
   }
 };
 
-export const calculateAPR = (principal: string, interest: string, duration: string) => {
+export const calculateAPR = (principal: string, interest: string, duration: string) : string => {
   const principalInEther = ethers.utils.formatEther(principal);
   const interestInEther = ethers.utils.formatEther(interest);
   const durationInYears = Number(duration) / (60 * 60 * 24 * 365); // Convert seconds to years
 
-  const APR = ((Number(interestInEther) / Number(principalInEther)) / durationInYears * 100).toFixed(5); // Calculate APR
+  const APR = ((Number(interestInEther) / Number(principalInEther)) / durationInYears * 100).toFixed(2); // Calculate APR
 
   return APR;
+}
+
+export function convertSeconds(seconds: string): string {
+  let remainder = +seconds;
+
+  const years = Math.floor(remainder / (365 * 24 * 60 * 60));
+  remainder %= 365 * 24 * 60 * 60;
+
+  const days = Math.floor(remainder / (24 * 60 * 60));
+  remainder %= 24 * 60 * 60;
+
+  const hours = Math.floor(remainder / (60 * 60));
+  remainder %= 60 * 60;
+
+  const minutes = Math.floor(remainder / 60);
+  remainder %= 60;
+
+  const descriptors = [
+      { value: years, unit: 'y' },
+      { value: days, unit: 'd' },
+      { value: hours, unit: 'h' },
+      { value: minutes, unit: 'min' },
+      { value: remainder, unit: 's' },
+  ];
+
+  const nonZeroDescriptors = descriptors.filter(descriptor => descriptor.value > 0);
+  const firstTwoDescriptors = nonZeroDescriptors.slice(0, 2);
+
+  return firstTwoDescriptors.map(descriptor => `${descriptor.value}${descriptor.unit}`).join(' ').trim();
 }
 
 export enum LoanStatus {
