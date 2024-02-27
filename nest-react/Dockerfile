@@ -8,6 +8,8 @@ RUN apk add --no-cache --virtual .gyp python3 make g++
 
 RUN npm install
 
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 CMD ["sh", "-c", "cd apps/client && npm run build && cd ../api && npm run build && npm run start"]
 
 EXPOSE 3000
