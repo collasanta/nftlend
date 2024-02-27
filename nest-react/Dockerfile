@@ -10,6 +10,9 @@ RUN npm install
 
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-CMD ["sh", "-c", "cd apps/client && npm run build && cd ../api && npm run build && npm run start"]
+RUN npm run build
+
+CMD ["npm", "run", "start"]
+
 
 EXPOSE 3000
