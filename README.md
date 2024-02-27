@@ -3,7 +3,7 @@
 A full implementation, from the smartcontracts to the frontend.
 
 ## Running the Production DaPP Locally (localhost:3000)
-cd nest-react && npm install && npx turbo run start
+cd nest-react && npm install && npm run build && npm run start
 
 ## Running the Development Environment (localhost:8000)
 cd snap-contracts && npm install && npx turbo run start
