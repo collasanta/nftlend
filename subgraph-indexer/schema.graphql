@@ -43,3 +43,31 @@ type LoanTermsSet @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
+type Loans @entity(immutable: true) {
+  id: Bytes!
+  loanId: BigInt! # uint256
+  initialOwner: Bytes! # address
+  nftContractAddress: Bytes! # address
+  tokenId: BigInt! # uint256
+  principal: BigInt! # uint256
+  duration: BigInt! # uint256
+  interest: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LoanStruct @entity(immutable: false) {
+  id: ID!
+  loanId: BigInt! # uint256
+  initialOwner: Bytes! # address
+  nftContractAddress: Bytes! # address
+  tokenId: BigInt! # uint256
+  principal: BigInt! # uint256
+  duration: BigInt! # uint256
+  interest: BigInt! # uint256
+  lender: Bytes # address
+  startDate: BigInt # uint256
+  status: Int!
+}

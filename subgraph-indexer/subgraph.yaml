@@ -1,0 +1,36 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: NFTVault
+    network: linea-goerli
+    source:
+      address: "0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711"
+      abi: NFTVault
+      startBlock: 3778149
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DefaultCollateral
+        - LoanLended
+        - LoanRepaid
+        - LoanTermsSet
+        - LoanStruct
+      abis:
+        - name: NFTVault
+          file: ./abis/NFTVault.json
+      eventHandlers:
+        - event: DefaultCollateral(uint256,indexed address)
+          handler: handleDefaultCollateral
+        - event: LoanLended(uint256,indexed address,uint256)
+          handler: handleLoanLended
+        - event: LoanRepaid(uint256,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleLoanRepaid
+        - event: LoanTermsSet(uint256,indexed address,indexed address,indexed uint256,uint256,uint256,uint256)
+          handler: handleLoanTermsSet
+      file: ./src/nft-vault.ts

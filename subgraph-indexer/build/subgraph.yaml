@@ -2,7 +2,7 @@ specVersion: 1.0.0
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: NFTVault
@@ -20,9 +20,10 @@ dataSources:
         - LoanLended
         - LoanRepaid
         - LoanTermsSet
+        - LoanStruct
       abis:
         - name: NFTVault
-          file: ./abis/NFTVault.json
+          file: NFTVault/abis/NFTVault.json
       eventHandlers:
         - event: DefaultCollateral(uint256,indexed address)
           handler: handleDefaultCollateral
@@ -30,6 +31,7 @@ dataSources:
           handler: handleLoanLended
         - event: LoanRepaid(uint256,indexed address,uint256,uint256,uint256,uint256)
           handler: handleLoanRepaid
-        - event: LoanTermsSet(uint256,indexed address,indexed address,indexed uint256,uint256,uint256,uint256)
+        - event: LoanTermsSet(uint256,indexed address,indexed address,indexed
+            uint256,uint256,uint256,uint256)
           handler: handleLoanTermsSet
-      file: ./src/nft-vault.ts
+      file: NFTVault/NFTVault.wasm

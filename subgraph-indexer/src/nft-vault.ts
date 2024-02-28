@@ -8,8 +8,10 @@ import {
   DefaultCollateral,
   LoanLended,
   LoanRepaid,
-  LoanTermsSet
+  LoanTermsSet,
+  LoanStruct
 } from "../generated/schema"
+
 
 export function handleDefaultCollateral(event: DefaultCollateralEvent): void {
   let entity = new DefaultCollateral(
@@ -23,6 +25,12 @@ export function handleDefaultCollateral(event: DefaultCollateralEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  let loan = LoanStruct.load(event.params.loanId.toString())
+  if (loan) {
+    loan.status = LoanStatus.Defaulted
+    loan.save()
+  }
 }
 
 export function handleLoanLended(event: LoanLendedEvent): void {
@@ -38,6 +46,16 @@ export function handleLoanLended(event: LoanLendedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  let loan = LoanStruct.load(event.params.loanId.toString())
+  if (loan) {
+    loan.status = LoanStatus.Active
+    loan.lender = event.params.lender
+    loan.startDate = event.params.startDate
+    loan.save()
+  }
+
+
 }
 
 export function handleLoanRepaid(event: LoanRepaidEvent): void {
@@ -56,6 +74,12 @@ export function handleLoanRepaid(event: LoanRepaidEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  let loan = LoanStruct.load(event.params.loanId.toString())
+  if (loan) {
+    loan.status = LoanStatus.Repaid
+    loan.save()
+  }
 }
 
 export function handleLoanTermsSet(event: LoanTermsSetEvent): void {
@@ -75,4 +99,22 @@ export function handleLoanTermsSet(event: LoanTermsSetEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  let loan = new LoanStruct(event.params.loanId.toString())
+  loan.loanId = event.params.loanId
+  loan.initialOwner = event.params.initialOwner
+  loan.nftContractAddress = event.params.nftContractAddress
+  loan.tokenId = event.params.tokenId
+  loan.principal = event.params.principal
+  loan.duration = event.params.duration
+  loan.interest = event.params.interest
+  loan.status = LoanStatus.Available
+  loan.save()
+}
+
+enum LoanStatus {
+  Available,
+  Active,
+  Defaulted,
+  Repaid,
 }

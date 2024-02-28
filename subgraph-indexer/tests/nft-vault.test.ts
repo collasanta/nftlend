@@ -5,7 +5,7 @@ import {
   clearStore,
   beforeAll,
   afterAll
-} from "matchstick-as/assembly/index"
+} from "matchstick-as"
 import { BigInt, Address } from "@graphprotocol/graph-ts"
 import { DefaultCollateral } from "../generated/schema"
 import { DefaultCollateral as DefaultCollateralEvent } from "../generated/NFTVault/NFTVault"
