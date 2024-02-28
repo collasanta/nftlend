@@ -1,0 +1,8 @@
+{
+  "linea-goerli": {
+    "NFTVault": {
+      "address": "0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711",
+      "startBlock": 3778149
+    }
+  }
+}

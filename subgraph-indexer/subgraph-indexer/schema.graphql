@@ -1,0 +1,45 @@
+type DefaultCollateral @entity(immutable: true) {
+  id: Bytes!
+  loanId: BigInt! # uint256
+  initialOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LoanLended @entity(immutable: true) {
+  id: Bytes!
+  loanId: BigInt! # uint256
+  lender: Bytes! # address
+  startDate: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LoanRepaid @entity(immutable: true) {
+  id: Bytes!
+  loanId: BigInt! # uint256
+  lender: Bytes! # address
+  repaymentAmount: BigInt! # uint256
+  proportionalInteresPaid: BigInt! # uint256
+  timePassed: BigInt! # uint256
+  refundExcessAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LoanTermsSet @entity(immutable: true) {
+  id: Bytes!
+  loanId: BigInt! # uint256
+  initialOwner: Bytes! # address
+  nftContractAddress: Bytes! # address
+  tokenId: BigInt! # uint256
+  principal: BigInt! # uint256
+  duration: BigInt! # uint256
+  interest: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
