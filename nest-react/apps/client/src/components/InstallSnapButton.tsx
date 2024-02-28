@@ -1,5 +1,4 @@
 import { useSDK } from "@metamask/sdk-react-ui";
-import { Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { ethereumRequest } from "@/lib/utils";
 
@@ -29,7 +28,7 @@ export const InstallSnapButton = () => {
   
   return (
     <div>
-      <Button onClick={installSnap} colorScheme="orange" isDisabled={!connected || installed}>Enable Snap</Button>
+      <button className={`mt-3 p-2 min-w-[100px] text-[14px]  ${!connected || installed ? "bg-gray-200 cursor-not-allowed" : "bg-blue-400"} shadow-sm text-white rounded-lg`} onClick={installSnap} disabled={!connected || installed}>Enable Snap</button>
     </div>
   )
 }

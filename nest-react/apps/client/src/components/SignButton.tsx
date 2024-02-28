@@ -1,5 +1,4 @@
 import { useSDK } from "@metamask/sdk-react-ui";
-import { Button } from "@chakra-ui/react";
 import { Buffer } from 'buffer';
 import { useState } from "react";
 import { EthereumTransactionParams, ethereumRequest, requestAccounts } from "@/lib/utils";
@@ -29,7 +28,7 @@ export const SignButton = () => {
 
   return (
     <div>
-      <Button onClick={handleConnectAndSign} colorScheme="red" isDisabled={!connected || signed}>Sign Legal Term</Button>
+      <button className={`mt-3 p-2 min-w-[100px] text-[14px]  ${!connected || signed ? "bg-gray-200 cursor-not-allowed" : "bg-orange-400"} shadow-sm text-white rounded-lg`} onClick={handleConnectAndSign} disabled={!connected || signed}>Sign Legal Term</button>
     </div>
   )
 }

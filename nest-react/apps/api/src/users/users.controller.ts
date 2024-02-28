@@ -67,4 +67,10 @@ export class UsersController {
       );
     }
   }
+
+  @Get('/loansIndexed')
+  async getLoansIndexed() {
+    const data = await this.usersService.getLoansIndexed();
+    return data;
+  }
 }

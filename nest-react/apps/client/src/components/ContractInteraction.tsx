@@ -64,7 +64,7 @@ const ContractInteraction = () => {
 
   return (
     <>
-      <div className='mx-auto flex flex-col sm:flex-row  max-w-[600px] space-y-2  mt-6  justify-center sm:justify-around sm:items-center'>
+      <div className='mx-auto flex flex-col sm:flex-row  max-w-[600px] space-y-2  justify-center sm:justify-around sm:items-center'>
         <div className='space-x-2 mx-auto flex'>
           <SignButton />
           <InstallSnapButton />

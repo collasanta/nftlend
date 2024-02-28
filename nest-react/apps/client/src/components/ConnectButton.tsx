@@ -2,7 +2,7 @@ import { MetaMaskButton } from "@metamask/sdk-react-ui";
 
 export const ConnectButton = () => {
   return (
-      <MetaMaskButton theme={"dark"} color="orange" text="Connect Wallet"></MetaMaskButton>
+      <MetaMaskButton theme={"light"} color="white" text="Connect Wallet"></MetaMaskButton>
   )
 }
 

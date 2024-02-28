@@ -78,20 +78,16 @@ export const ListingCard = (
 
   return (
     <>
-      <div className="flex flex-col mx-auto border max-w-[600px] bg-slate-200 border-black/5 text-card-foreground shadow-sm rounded-lg text-[13px]  py-2 px-2 hover:shadow-lg transition">
+      <div className="flex flex-col border border-black mx-auto max-w-[600px] bg-card text-card-foreground  rounded-lg text-[13px]  py-2 px-2 hover:shadow-lg transition">
         <div className="flex flex-col pt-6 sm:pt-0 sm:flex-row items-center justify-around">
-          <div className="flex flex-col items-center gap-x-2 truncate">
+          <div className="flex flex-col items-center gap-x-2 truncate border border-black/10 rounded-lg">
             <div onClick={handleClick} className="cursor-pointer w-fit bg-card py-1 rounded-md mx-auto text-center flex flex-col justify-center items-center">
               <img src={listing.imgURL} width={112} height={64} alt="thumbnail" className="rounded-md" />
-              <span className="text-zinc-500 p-1 rounded-lg bg-slate-200">{listing.name}</span>
+              <span className="text-black-500 p-1 rounded-lg font-[400]">{listing.name}</span>
             </div>
           </div>
-          <div onClick={handleClick} className="cursor-pointer">
-            <div className="pb-2">
-              <div className="flex flex-col items-center">
-              </div>
-            </div>
-            <div className="grid grid-cols-2 text-start bg-card p-2 rounded-lg max-w-[250px] min-w-[200px]" style={{ gridTemplateColumns: '1fr 2fr' }}>
+          <div onClick={handleClick} className=" border rounded-lg cursor-pointer">
+            <div className=" grid grid-cols-2 text-start bg-card p-2 rounded-lg max-w-[250px] min-w-[200px]" style={{ gridTemplateColumns: '1fr 2fr' }}>
               <div className="flex flex-col justify-start items-start">
                 <p className="text-[10px] pr-2 text-sm text-center whitespace-break-spaces">Chain:</p>
                 <p className="text-[10px] pr-2 text-sm text-center whitespace-break-spaces">Principal:</p>
@@ -126,7 +122,7 @@ export const ListingCard = (
                 {listing.loanStatus === LoanStatus.Defaulted && '🔴'}
                 {listing.loanStatus === LoanStatus.Repaid && '🔵'}
               </span>
-              <span className="text-[13px] text-gray-600 ml-2">
+              <span className="text-[13px] text-black font-[400] ml-2">
                 {listing.loanStatus === LoanStatus.Available && 'Available'}
                 {(listing.loanStatus === LoanStatus.Active && timeLeft !== 0) && 'Active'}
                 {(listing.loanStatus === LoanStatus.Active && timeLeft === 0) && 'Expired'}

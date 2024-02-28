@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ethers, Interface } from 'ethers';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { abi } from '../abi/NFTVault.json';
 
 const nftVaultAddress = '0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711';
@@ -40,13 +41,52 @@ export interface Loan {
   name: string;
 }
 
+interface LoanIndexedStruct {
+  __typename: string;
+  duration: string;
+  initialOwner: string;
+  interest: string;
+  lender: string;
+  loanId: string;
+  nftContractAddress: string;
+  principal: string;
+  startDate: string;
+  status: number;
+  tokenId: string;
+}
+
 @Injectable()
 export class UsersService {
-  private provider(): ethers.JsonRpcProvider {
-    const provider = new ethers.JsonRpcProvider(
+  // private client: ApolloClient<any>;
+
+  // constructor() {
+  //   // ...existing code...
+
+  //   this.client = new ApolloClient({
+  //     uri: 'https://api.studio.thegraph.com/query/66890/nftlend/v.0.0.3',
+  //     cache: new InMemoryCache(),
+  //   });
+  // }
+
+  // private provider(): ethers.JsonRpcProvider {
+  //   const provider = new ethers.JsonRpcProvider(
+  //     `https://linea-goerli.infura.io/v3/${infuraKey}`,
+  //   );
+  //   return provider;
+  // }
+
+  private client: ApolloClient<any>;
+  private provider: ethers.JsonRpcProvider;
+
+  constructor() {
+    this.client = new ApolloClient({
+      uri: 'https://api.studio.thegraph.com/query/66890/nftlend/v.0.0.3',
+      cache: new InMemoryCache(),
+    });
+
+    this.provider = new ethers.JsonRpcProvider(
       `https://linea-goerli.infura.io/v3/${infuraKey}`,
     );
-    return provider;
   }
 
   async getMetadata(
@@ -56,7 +96,7 @@ export class UsersService {
     const abi = [
       'function tokenURI(uint256 _tokenId) external view returns (string)',
     ];
-    const provider = this.provider();
+    const provider = this.provider;
     const chain = await provider.getNetwork();
     const contract = new ethers.Contract(contractAddress, abi, provider);
     const tokenURI = await contract.tokenURI(tokenId);
@@ -151,7 +191,7 @@ export class UsersService {
 
   async getLoan(index: number): Promise<string[]> {
     try {
-      const provider = this.provider();
+      const provider = this.provider;
       const contract = new ethers.Contract(
         nftVaultAddress,
         nftVaultInterface,
@@ -166,5 +206,53 @@ export class UsersService {
       console.error(`Failed to get loan at index ${index}: ${error}`);
       throw error;
     }
+  }
+
+  async getLoansIndexed() {
+    console.time('getLoansIndexed');
+    const GET_LOAN_STRUCTS = gql`
+      {
+        loanStructs(orderBy: loanId) {
+          duration
+          initialOwner
+          interest
+          lender
+          loanId
+          nftContractAddress
+          principal
+          startDate
+          status
+          tokenId
+        }
+      }
+    `;
+
+    const result = await this.client.query({ query: GET_LOAN_STRUCTS });
+    const listings: LoanIndexedStruct[] = result.data.loanStructs;
+    const listingsMetadata = await Promise.all(
+      listings.map(async (listing) => {
+        const metadata = await this.getMetadata(
+          listing.nftContractAddress,
+          +listing.tokenId,
+        );
+        return {
+          loanId: +listing.loanId,
+          initialOwner: listing.initialOwner,
+          nftContractAddress: listing.nftContractAddress,
+          tokenId: listing.tokenId,
+          principal: listing.principal,
+          duration: listing.duration,
+          interest: listing.interest,
+          lender: listing.lender,
+          startDate: listing.startDate,
+          loanStatus: listing.status.toString(),
+          chain: metadata.chain,
+          imgURL: metadata.imgURL,
+          name: metadata.metadata.name,
+        };
+      }),
+    );
+    console.timeEnd('getLoansIndexed');
+    return listingsMetadata;
   }
 }
