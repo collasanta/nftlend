@@ -1,5 +1,5 @@
 ##  🖼️ NFTlend - Decentralized NFT as Collatreal Lending Protocol 💰  
-🟢  Live at: https://nftlend.bluestone-e970e019.eastus.azurecontainerapps.io
+🟢  Live at: https://nftlend.collasanta.com
 A full implementation, from the smartcontracts to the frontend.
 
 ## Running the Production DaPP Locally (localhost:3000)
