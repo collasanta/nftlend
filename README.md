@@ -1,6 +1,5 @@
 ##  🖼️ NFTlend - Decentralized NFT as Collatreal Lending Protocol 💰  
 🟢  Live at: https://nftlend.collasanta.com
-A full implementation, from the smartcontracts to the frontend.
 
 ## Running the Production DaPP Locally (localhost:3000)
 cd nest-react && npm install && npm run build && npm run start
