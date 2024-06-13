@@ -80,7 +80,7 @@ export class UsersService {
 
   constructor() {
     this.client = new ApolloClient({
-      uri: 'https://api.studio.thegraph.com/query/66890/nftlend/v.0.0.3',
+      uri: 'https://api.studio.thegraph.com/query/66890/nftlend/v.0.0.1',
       cache: new InMemoryCache(),
     });
 
