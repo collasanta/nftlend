@@ -57,24 +57,6 @@ interface LoanIndexedStruct {
 
 @Injectable()
 export class UsersService {
-  // private client: ApolloClient<any>;
-
-  // constructor() {
-  //   // ...existing code...
-
-  //   this.client = new ApolloClient({
-  //     uri: 'https://api.studio.thegraph.com/query/66890/nftlend/v.0.0.3',
-  //     cache: new InMemoryCache(),
-  //   });
-  // }
-
-  // private provider(): ethers.JsonRpcProvider {
-  //   const provider = new ethers.JsonRpcProvider(
-  //     `https://linea-goerli.infura.io/v3/${infuraKey}`,
-  //   );
-  //   return provider;
-  // }
-
   private client: ApolloClient<any>;
   private provider: ethers.JsonRpcProvider;
 
