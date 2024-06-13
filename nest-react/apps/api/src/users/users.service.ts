@@ -6,7 +6,6 @@ import { abi } from '../abi/NFTVault.json';
 const nftVaultAddress = '0x6B9e07c05B2B4f74C43dfDD7Bf09Efd14C700711';
 const nftVaultInterface = new Interface(abi);
 const infuraKey = 'c8c18bb708574c728d95fb45ec034dfe';
-
 export interface MetadataResult {
   contractAddress: string;
   chain: string;
